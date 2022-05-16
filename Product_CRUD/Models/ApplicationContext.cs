@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Product_CRUD.Models.Configuration;
 using Product_CRUD.Models.Entities;
 
 namespace Product_CRUD.Models
@@ -15,6 +16,9 @@ namespace Product_CRUD.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>().Property(p => p.Price).HasPrecision(10, 2);
+
+            modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new ProductConfiguration());
         }
     }
 }
