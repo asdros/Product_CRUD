@@ -1,13 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using NLog;
+using Product_CRUD.Interfaces;
+using Product_CRUD.Services;
+using System.IO;
 
 namespace Product_CRUD
 {
@@ -16,6 +15,8 @@ namespace Product_CRUD
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(),
+                "/nlog.config"));
         }
 
         public IConfiguration Configuration { get; }
@@ -23,6 +24,7 @@ namespace Product_CRUD
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<ILoggerManager, LoggerManager>();
             services.AddControllersWithViews();
         }
 
