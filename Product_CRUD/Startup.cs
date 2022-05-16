@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NLog;
 using Product_CRUD.Interfaces;
+using Product_CRUD.Models;
 using Product_CRUD.Services;
 using System.IO;
 
@@ -25,6 +27,9 @@ namespace Product_CRUD
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<ILoggerManager, LoggerManager>();
+            services.AddDbContext<ApplicationContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("sqlConnection")));
+
             services.AddControllersWithViews();
         }
 
