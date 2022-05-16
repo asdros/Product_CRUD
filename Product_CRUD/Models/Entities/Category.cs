@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Product_CRUD.Models.Entities
@@ -11,5 +12,7 @@ namespace Product_CRUD.Models.Entities
         [Required(ErrorMessage = "Nazwa kategorii jest wymagana")]
         [MaxLength(20, ErrorMessage = "Maksymalna długość to 20 znaków.")]
         public string CategoryName { get; set; }
+
+        public virtual ICollection<Product> Products { get; set; }
     }
 }
