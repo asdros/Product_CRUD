@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -39,8 +40,10 @@ namespace Product_CRUD.Controllers
 
             var category = await _context.Categories
                               .Where(c => c.Id.Equals(id))
-                              .Include(c=>c.Products.Where(p=>p.CategoryId.Equals(c.Id)))
                               .SingleOrDefaultAsync();
+
+            category.Products = await _context.Products
+                                .Where(p => p.CategoryId.Equals(id)).ToListAsync();
 
             if (category == null)
             {
@@ -71,6 +74,32 @@ namespace Product_CRUD.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
+        }
+
+        // GET: Categories/Delete/5
+        public async Task<IActionResult> Delete(short? id)
+        {
+            if (id == null)
+            {
+                _logger.LogInfo($"Id: {id} of category is incorrect.");
+                return NotFound();
+            }
+
+            var category = await _context.Categories
+                            .Where(p => p.Id.Equals(id))
+                            .SingleOrDefaultAsync();
+
+            if (category == null)
+            {
+                _logger.LogInfo($"Not found a category with id: {id}.");
+                return NotFound();
+            }
+
+            _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+
         }
     }
 }

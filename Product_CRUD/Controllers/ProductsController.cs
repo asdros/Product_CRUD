@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Product_CRUD.Interfaces;
 using Product_CRUD.Models;
+using Product_CRUD.Models.Entities;
 
 namespace Product_CRUD.Controllers
 {
@@ -58,6 +59,21 @@ namespace Product_CRUD.Controllers
         {
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "CategoryName");
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Name,CategoryId,Price")] Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                product.Id = Guid.NewGuid();
+                _context.Add(product);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "CategoryName", product.CategoryId);
+            return View(product);
         }
 
         // GET: Products/Delete/5
