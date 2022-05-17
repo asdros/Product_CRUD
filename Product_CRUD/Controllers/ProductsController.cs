@@ -22,17 +22,19 @@ namespace Product_CRUD.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index(string sortOrder)
+        public  ViewResult Index(string sortOrder,string searchString)
         {
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.CategorySortParm = sortOrder == "Category" ? "category_desc" : "Category";
             ViewBag.PriceSortParm = sortOrder == "Price" ? "price_desc" : "Price";
 
-            var products1 = await _context.Products
-                            .Include(p => p.Category)
-                            .ToListAsync();
             var products = from p in  _context.Products.Include(x=>x.Category)
                             select p;
+
+            if(!String.IsNullOrEmpty(searchString))
+            {
+                products = products.Where(p => p.Name.Contains(searchString));
+            }
 
             switch(sortOrder)
             {

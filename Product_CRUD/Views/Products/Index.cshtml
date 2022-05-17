@@ -4,6 +4,14 @@
     ViewData["Title"] = "Lista produktów";
 }
 
+@using(Html.BeginForm())
+{
+    <p>
+        Wyszukaj nazwę produktu: @Html.TextBox("SearchString")
+        <input type="submit" class="btn btn-success btn-sm" value="Szukaj"/>
+    </p>
+}
+
 <p>
     <button class="btn btn-secondary" onclick="location.href='@Url.Action("Create","Products")'">Dodaj nowy produkt</button>
 </p>
