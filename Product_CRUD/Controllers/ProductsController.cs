@@ -22,11 +22,39 @@ namespace Product_CRUD.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
-            var products = await _context.Products
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.CategorySortParm = sortOrder == "Category" ? "category_desc" : "Category";
+            ViewBag.PriceSortParm = sortOrder == "Price" ? "price_desc" : "Price";
+
+            var products1 = await _context.Products
                             .Include(p => p.Category)
                             .ToListAsync();
+            var products = from p in  _context.Products.Include(x=>x.Category)
+                            select p;
+
+            switch(sortOrder)
+            {
+                case "name_desc":
+                    products = products.OrderByDescending(p => p.Name);
+                    break;
+                case "Category":
+                    products = products.OrderBy(p => p.Category.CategoryName);
+                    break;
+                case "category_desc":
+                    products = products.OrderByDescending(p => p.Category.CategoryName);
+                    break;
+                case "Price":
+                    products = products.OrderBy(p => p.Price);
+                    break;
+                case "price_desc":
+                    products = products.OrderByDescending(p => p.Price);
+                    break;
+                default:
+                    products = products.OrderBy(p => p.Name);
+                    break;
+            }
 
             return View(products);
         }
@@ -65,15 +93,21 @@ namespace Product_CRUD.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,CategoryId,Price")] Product product)
         {
-            if (ModelState.IsValid)
+            if (product == null)
             {
-                product.Id = Guid.NewGuid();
-                _context.Add(product);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _logger.LogError("Product object sent from client is null.");
+                return BadRequest("Product object is null");
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "CategoryName", product.CategoryId);
-            return View(product);
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the Product object");
+                return UnprocessableEntity(ModelState);
+            }
+
+            _context.Add(product);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Products/Delete/5

@@ -5,19 +5,19 @@
 }
 
 <p>
-    <a asp-action="Create">Dodaj nowy produkt</a>
+    <button class="btn btn-secondary" onclick="location.href='@Url.Action("Create","Products")'">Dodaj nowy produkt</button>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.ActionLink("Nazwa", "Index", new { sortOrder = ViewBag.NameSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Category)
+                @Html.ActionLink("Kategoria", "Index", new { sortOrder = ViewBag.CategorySortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                @Html.ActionLink("Cena", "Index", new { sortOrder = ViewBag.PriceSortParm })
             </th>
             <th></th>
         </tr>
@@ -35,7 +35,7 @@
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
-                <a asp-action="Delete" asp-route-id="@item.Id">Usuwanie</a>
+               <button class="btn btn-danger btn-sm" onclick="location.href='@Url.Action("Delete","Products",new {id = item.Id})'">Usuń</button>
             </td>
         </tr>
 }
