@@ -104,7 +104,7 @@ namespace Product_CRUD.Controllers
             if (!ModelState.IsValid)
             {
                 _logger.LogError("Invalid model state for the Product object");
-                return UnprocessableEntity(ModelState);
+                return View(product);
             }
 
             _context.Add(product);

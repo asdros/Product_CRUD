@@ -22,7 +22,7 @@ namespace Product_CRUD.Models.Entities
         private decimal _price;
 
         [Required(ErrorMessage = "Cena produktu jest wymagana.")]
-        [RegularExpression(@"^\d+(.\d{1,2})?$", ErrorMessage = "Nieprawidłowa cena.")]
+        [DataType(DataType.Currency, ErrorMessage = "Nieprawidłowa cena!")]
         public decimal Price
         {
             get
