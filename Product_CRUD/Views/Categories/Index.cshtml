@@ -1,21 +1,20 @@
 ﻿@model IEnumerable<Product_CRUD.Models.Entities.Category>
 
 @{
-    ViewData["Title"] = "Kategorie";
+    ViewData["Title"] = "Lista kategorii";
 }
-
-<h1>Kategorie</h1>
 
 <p>
     <button class="btn btn-secondary" onclick="location.href='@Url.Action("Create","Categories")'">Dodaj nową kategorię</button>
 </p>
-<table class="table">
+<h6 class="bg-primary text-white text-center m-2 p-2">Lista kategorii</h6>
+<table class="table table-sm table-striped table-bordered" id="contentTable">
     <thead>
         <tr>
-            <th>
+            <th class="text-center">
                 Nazwa kategorii
             </th>
-            <th>Akcja</th>
+            <th class="text-center">Akcja</th>
         </tr>
     </thead>
     <tbody>

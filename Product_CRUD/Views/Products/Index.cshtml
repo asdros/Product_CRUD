@@ -11,23 +11,23 @@
         <input type="submit" class="btn btn-success btn-sm" value="Szukaj"/>
     </p>
 }
-
 <p>
     <button class="btn btn-secondary" onclick="location.href='@Url.Action("Create","Products")'">Dodaj nowy produkt</button>
 </p>
-<table class="table">
+<h6 class="bg-primary text-white text-center m-2 p-2">Lista produktów</h6>
+<table class="table table-sm table-striped table-bordered" id="contentTable">
     <thead>
         <tr>
-            <th>
+            <th class="text-center">
                 @Html.ActionLink("Nazwa", "Index", new { sortOrder = ViewBag.NameSortParm })
             </th>
-            <th>
+            <th class="text-center">
                 @Html.ActionLink("Kategoria", "Index", new { sortOrder = ViewBag.CategorySortParm })
             </th>
-            <th>
-                @Html.ActionLink("Cena", "Index", new { sortOrder = ViewBag.PriceSortParm })
+            <th class="text-center">
+                @Html.ActionLink("Cena brutto (23% VAT)", "Index", new { sortOrder = ViewBag.PriceSortParm })
             </th>
-            <th></th>
+            <th class="text-center">Akcje</th>
         </tr>
     </thead>
     <tbody>
@@ -49,9 +49,3 @@
 }
     </tbody>
 </table>
-
-@*   <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>*@
