@@ -22,21 +22,21 @@ namespace Product_CRUD.Controllers
         }
 
         // GET: Products
-        public  ViewResult Index(string sortOrder,string searchString)
+        public ViewResult Index(string sortOrder, string searchString)
         {
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.CategorySortParm = sortOrder == "Category" ? "category_desc" : "Category";
             ViewBag.PriceSortParm = sortOrder == "Price" ? "price_desc" : "Price";
 
-            var products = from p in  _context.Products.Include(x=>x.Category)
-                            select p;
+            var products = from p in _context.Products.Include(x => x.Category)
+                           select p;
 
-            if(!String.IsNullOrEmpty(searchString))
+            if (!String.IsNullOrEmpty(searchString))
             {
                 products = products.Where(p => p.Name.Contains(searchString));
             }
 
-            switch(sortOrder)
+            switch (sortOrder)
             {
                 case "name_desc":
                     products = products.OrderByDescending(p => p.Name);
@@ -136,6 +136,72 @@ namespace Product_CRUD.Controllers
 
             return RedirectToAction("Index");
 
+        }
+
+        // GET: Products/Edit/5
+        public async Task<IActionResult> Edit(Guid? id)
+        {
+            if (id == null)
+            {
+                _logger.LogInfo($"Id: {id} of product is incorrect.");
+                return RedirectToAction("Index");
+            }
+
+            var product = await _context.Products
+                            .Where(p => p.Id.Equals(id))
+                            .SingleOrDefaultAsync();
+
+            if (product == null)
+            {
+                _logger.LogInfo($"Not found a product with id: {id}.");
+                return NotFound();
+            }
+
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "CategoryName", product.CategoryId);
+            return View(product);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,CategoryId,Price")] Product product)
+        {
+            if (id != product.Id)
+            {
+                _logger.LogInfo($"Not found a product with id: {id}.");
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(product);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProductExists(product.Id))
+                    {
+                        _logger.LogError("Product object sent from the client does not exist in the database.");
+                        return NotFound();
+                    }
+                    else
+                    {
+                        _logger.LogError("Internal application error when updating a record.");
+                        throw;
+                    }
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "CategoryName", product.CategoryId);
+            return View(product);
+        }
+
+        private bool ProductExists(Guid id)
+        {
+            return _context.Products.Any(e => e.Id == id);
         }
     }
 }
