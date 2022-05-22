@@ -43,6 +43,7 @@
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
+               <button class="btn btn-warning btn-sm" onclick="location.href='@Url.Action("Edit","Products",new {id = item.Id})'">Edytuj</button>
                <button class="btn btn-danger btn-sm" onclick="location.href='@Url.Action("Delete","Products",new {id = item.Id})'">Usuń</button>
             </td>
         </tr>
