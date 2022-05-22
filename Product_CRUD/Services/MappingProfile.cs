@@ -11,10 +11,12 @@ namespace Product_CRUD.Services
         {
             CreateMap<Product, ProductToDisplayDTO>()
                 .ForMember(p => p.GrossPrice,
-                opt => opt.MapFrom(x => 
-                                    Math.Round(x.NetPrice * x.Tax.Value,2)))
-                .ForMember(p=>p.NettoPrice,
-                opt =>opt.MapFrom(x=>x.NetPrice));
+                opt => opt.MapFrom(x =>
+                    Math.Round(x.NetPrice * x.Tax.Value, 2)))
+                .ForMember(p => p.NettoPrice,
+                    opt => opt.MapFrom(x => x.NetPrice))
+                .ForMember(p => p.CategoryName,
+                    opt => opt.MapFrom(x => x.Category.CategoryName));
 
             CreateMap<Category, CategoryToDisplayDTO>();
         }

@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Product_CRUD.Interfaces;
 using Product_CRUD.Models;
+using Product_CRUD.Models.DTO;
 using Product_CRUD.Models.Entities;
 
 namespace Product_CRUD.Controllers
@@ -14,22 +17,28 @@ namespace Product_CRUD.Controllers
     {
         private readonly ApplicationContext _context;
         private readonly ILoggerManager _logger;
+        private readonly IMapper _mapper;
 
-        public ProductsController(ApplicationContext context, ILoggerManager logger)
+        public ProductsController(ApplicationContext context, ILoggerManager logger, IMapper mapper)
         {
             _context = context;
             _logger = logger;
+            _mapper = mapper;
         }
 
         // GET: Products
-        public ViewResult Index(string sortOrder, string searchString)
+        public async Task<ViewResult> Index(string sortOrder, string searchString)
         {
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
             ViewBag.CategorySortParm = sortOrder == "Category" ? "category_desc" : "Category";
             ViewBag.PriceSortParm = sortOrder == "Price" ? "price_desc" : "Price";
 
-            var products = from p in _context.Products.Include(x => x.Category)
-                           select p;
+            var productsFromDB = await _context.Products
+                                    .Include(p => p.Category)
+                                    .Include(p=>p.Tax)
+                                    .ToListAsync();
+
+            var products = _mapper.Map<IEnumerable<ProductToDisplayDTO>>(productsFromDB);
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -42,16 +51,16 @@ namespace Product_CRUD.Controllers
                     products = products.OrderByDescending(p => p.Name);
                     break;
                 case "Category":
-                    products = products.OrderBy(p => p.Category.CategoryName);
+                    products = products.OrderBy(p => p.CategoryName);
                     break;
                 case "category_desc":
-                    products = products.OrderByDescending(p => p.Category.CategoryName);
+                    products = products.OrderByDescending(p => p.CategoryName);
                     break;
                 case "Price":
-                    products = products.OrderBy(p => p.NetPrice);
+                    products = products.OrderBy(p => p.NettoPrice);
                     break;
                 case "price_desc":
-                    products = products.OrderByDescending(p => p.NetPrice);
+                    products = products.OrderByDescending(p => p.NettoPrice);
                     break;
                 default:
                     products = products.OrderBy(p => p.Name);

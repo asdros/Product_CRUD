@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Product_CRUD.Models.Entities.Product>
+﻿@model IEnumerable<Product_CRUD.Models.DTO.ProductToDisplayDTO>
 
 @{
     ViewData["Title"] = "Lista produktów";
@@ -19,10 +19,10 @@
     <thead>
         <tr>
             <th class="text-center">
-                @Html.ActionLink("Nazwa", "Index", new { sortOrder = ViewBag.NameSortParm })
+                @Html.ActionLink("Nazwa", "Index", new { sortOrder = ViewBag.NameSortParm }, new {title = "Sortuj po nazwie"})
             </th>
             <th class="text-center">
-                @Html.ActionLink("Kategoria", "Index", new { sortOrder = ViewBag.CategorySortParm })
+                @Html.ActionLink("Kategoria", "Index", new { sortOrder = ViewBag.CategorySortParm }, new {title = "Sortuj po nazwie kategorii"})
             </th>
             <th class="text-center">
                 @Html.ActionLink("Cena", "Index", new { sortOrder = ViewBag.PriceSortParm }, new {title = "Sortuj po cenie netto"})
@@ -37,10 +37,14 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                @Html.DisplayFor(modelItem => item.CategoryName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.NetPrice)
+                @Html.DisplayFor(modelItem => item.NettoPrice)
+                (@Html.DisplayFor(modelItem=>item.GrossPrice) 
+                <b>
+                    @Html.DisplayFor(modelItem=>item.TaxDisplayValue) VAT
+                </b>)
             </td>
             <td>
                <button class="btn btn-warning btn-sm" onclick="location.href='@Url.Action("Edit","Products",new {id = item.Id})'">Edytuj</button>
