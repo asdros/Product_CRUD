@@ -16,42 +16,48 @@ namespace Product_CRUD.Models.Configuration
                     Id = Guid.NewGuid(),
                     Name = "Wiśnia",
                     CategoryId = 1,
-                    Price = 37.22M
+                    NetPrice = 37.22M,
+                    TaxId = 4
                 },
                 new Product
                 {
                     Id = Guid.NewGuid(),
                     Name = "Jabłoń",
                     CategoryId = 1,
-                    Price = 13.57M
+                    NetPrice = 13.57M,
+                    TaxId = 4
                 },
                 new Product
                 {
                     Id = Guid.NewGuid(),
                     Name = "Rzodkiewka",
                     CategoryId = 3,
-                    Price = 7.22M
+                    NetPrice = 7.22M,
+                    TaxId = 4
                 },
                 new Product
                 {
                     Id = Guid.NewGuid(),
                     Name = "Marchew",
                     CategoryId = 3,
-                    Price = 1.23M
+                    NetPrice = 1.23M,
+                    TaxId = 4
                 },
                 new Product
                 {
                     Id = Guid.NewGuid(),
                     Name = "Mak",
                     CategoryId = 2,
-                    Price = 37.22M
+                    NetPrice = 37.22M,
+                    TaxId = 4
                 },
                 new Product
                 {
                     Id = Guid.NewGuid(),
                     Name = "Śliwka",
                     CategoryId = 1,
-                    Price = 35.23M
+                    NetPrice = 35.23M,
+                    TaxId = 4
                 }
                 );
         }

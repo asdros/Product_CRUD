@@ -40,7 +40,7 @@
                 @Html.DisplayFor(modelItem => item.Category.CategoryName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Price)
+                @Html.DisplayFor(modelItem => item.NetPrice)
             </td>
             <td>
                <button class="btn btn-warning btn-sm" onclick="location.href='@Url.Action("Edit","Products",new {id = item.Id})'">Edytuj</button>

@@ -48,10 +48,10 @@ namespace Product_CRUD.Controllers
                     products = products.OrderByDescending(p => p.Category.CategoryName);
                     break;
                 case "Price":
-                    products = products.OrderBy(p => p.Price);
+                    products = products.OrderBy(p => p.NetPrice);
                     break;
                 case "price_desc":
-                    products = products.OrderByDescending(p => p.Price);
+                    products = products.OrderByDescending(p => p.NetPrice);
                     break;
                 default:
                     products = products.OrderBy(p => p.Name);
@@ -88,12 +88,13 @@ namespace Product_CRUD.Controllers
         public IActionResult Create()
         {
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "CategoryName");
+            ViewData["TaxId"] = new SelectList(_context.Taxes, "Id", "DisplayValue");
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,CategoryId,Price")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Name,CategoryId,NetPrice,TaxId")] Product product)
         {
             if (product == null)
             {
@@ -158,12 +159,13 @@ namespace Product_CRUD.Controllers
             }
 
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "CategoryName", product.CategoryId);
+            ViewData["TaxId"] = new SelectList(_context.Taxes, "Id", "DisplayValue", product.TaxId);
             return View(product);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,CategoryId,Price")] Product product)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,CategoryId,NetPrice,TaxId")] Product product)
         {
             if (id != product.Id)
             {

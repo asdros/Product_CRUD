@@ -19,20 +19,14 @@ namespace Product_CRUD.Models.Entities
         public short CategoryId { get; set; }
         public virtual Category Category { get; set; }
 
-        private decimal _price;
+        [Required(ErrorMessage = "Stawka VAT jest wymagana.")]
+        [Range(0, byte.MaxValue, ErrorMessage = "Identyfikator kategorii musi być liczbą, mniejszą niż 255.")]
+        [ForeignKey(nameof(Tax))]
+        public byte TaxId { get; set; }
+        public virtual Tax Tax { get; set; }
 
         [Required(ErrorMessage = "Cena produktu jest wymagana.")]
         [DataType(DataType.Currency, ErrorMessage = "Nieprawidłowa cena!")]
-        public decimal Price
-        {
-            get
-            {
-                return _price;
-            }
-            set
-            {
-                _price = value * 1.23M;         //adding 23% tax during adding a new product to a database
-            }
-        }
+        public decimal NetPrice { get; set; }
     }
 }

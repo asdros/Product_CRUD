@@ -8,5 +8,7 @@ namespace Product_CRUD.Models.Entities
         public byte Id { get; set; }
 
         public decimal Value { get; set; }
+
+        public string DisplayValue { get; set; }
     }
 }

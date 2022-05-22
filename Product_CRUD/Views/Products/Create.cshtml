@@ -20,9 +20,13 @@
                 <select asp-for="CategoryId" class ="form-control" asp-items="ViewBag.CategoryId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="Price" class="control-label">Cena netto</label>
-                <input asp-for="Price" class="form-control" id="price" />
-                <span asp-validation-for="Price" class="text-danger"></span>
+                <label asp-for="TaxId" class="control-label">Podatek VAT</label>
+                <select asp-for="TaxId" class ="form-control" asp-items="ViewBag.TaxId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="NetPrice" class="control-label">Cena netto</label>
+                <input asp-for="NetPrice" class="form-control" id="price" />
+                <span asp-validation-for="NetPrice" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Dodaj do bazy" class="btn btn-primary" />
