@@ -30,6 +30,8 @@ namespace Product_CRUD
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("sqlConnection")));
 
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddControllersWithViews();
         }
 

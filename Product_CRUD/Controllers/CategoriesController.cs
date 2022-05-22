@@ -1,10 +1,12 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Product_CRUD.Interfaces;
 using Product_CRUD.Models;
+using Product_CRUD.Models.DTO;
 using Product_CRUD.Models.Entities;
 
 namespace Product_CRUD.Controllers
@@ -13,11 +15,13 @@ namespace Product_CRUD.Controllers
     {
         private readonly ApplicationContext _context;
         private readonly ILoggerManager _logger;
+        private readonly IMapper _mapper;
 
-        public CategoriesController(ApplicationContext context, ILoggerManager logger)
+        public CategoriesController(ApplicationContext context, ILoggerManager logger, IMapper mapper)
         {
             _context = context;
             _logger = logger;
+            _mapper = mapper;
         }
 
         // GET: Categories
@@ -38,20 +42,26 @@ namespace Product_CRUD.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories
+            var categoryFromDB = await _context.Categories
                               .Where(c => c.Id.Equals(id))
                               .SingleOrDefaultAsync();
 
-            category.Products = await _context.Products
-                                .Where(p => p.CategoryId.Equals(id)).ToListAsync();
-
-            if (category == null)
+            if (categoryFromDB == null)
             {
                 _logger.LogInfo($"Category with id: {id} does not exist in a database.");
                 return NotFound();
             }
 
-            return View(category);
+            var productsFromDb = await _context.Products
+                                .Where(p => p.CategoryId.Equals(id))
+                                .Include(p => p.Tax)
+                                .ToListAsync();
+
+            var categoryDTO = _mapper.Map<CategoryToDisplayDTO>(categoryFromDB);
+
+            categoryDTO.ProductToDisplayDTOs = _mapper.Map<ICollection<ProductToDisplayDTO>>(productsFromDb);
+
+            return View(categoryDTO);
         }
 
         // GET: Categories/Create

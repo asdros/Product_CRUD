@@ -25,7 +25,7 @@
                 @Html.ActionLink("Kategoria", "Index", new { sortOrder = ViewBag.CategorySortParm })
             </th>
             <th class="text-center">
-                @Html.ActionLink("Cena brutto (23% VAT)", "Index", new { sortOrder = ViewBag.PriceSortParm })
+                @Html.ActionLink("Cena", "Index", new { sortOrder = ViewBag.PriceSortParm }, new {title = "Sortuj po cenie netto"})
             </th>
             <th class="text-center">Akcje</th>
         </tr>

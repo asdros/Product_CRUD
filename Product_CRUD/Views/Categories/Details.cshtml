@@ -1,4 +1,4 @@
-﻿@model Product_CRUD.Models.Entities.Category
+﻿@model Product_CRUD.Models.DTO.CategoryToDisplayDTO
 
 @{
     ViewData["Title"] = Model.CategoryName + " - szczegóły";
@@ -8,10 +8,10 @@
     <h4>
         @Html.DisplayFor(model => model.CategoryName)
     </h4>
-
-    <a asp-controller="Products" asp-action="Create">Dodaj nowy produkt</a>    
-    
-    @if(!Model.Products.Any())
+<p>
+    <button class="btn btn-secondary" onclick="location.href='@Url.Action("Create","Products")'">Dodaj nowy produkt</button>
+</p>
+    @if(!Model.ProductToDisplayDTOs.Any())
     {
         <p>Brak produktów w tej kategorii</p>
     }
@@ -32,14 +32,14 @@
                 </tr>
             </thead>
             <tbody>
-            @foreach (var product in Model.Products) 
+            @foreach (var product in Model.ProductToDisplayDTOs) 
             {
                 <tr>
                     <td>
                         @product.Name
                     </td>
                     <td>
-                        @product.NetPrice
+                        @product.NettoPrice (@product.GrossPrice <b>@product.TaxDisplayValue VAT</b>)
                     </td>
                     <td>
                          <button class="btn btn-info btn-sm" onclick="location.href='@Url.Action("Details","Products",new {id = product.Id})'">Szczegóły</button>
